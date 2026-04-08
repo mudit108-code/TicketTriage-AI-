@@ -1,0 +1,81 @@
+name: ticket_triage
+version: "1.0.0"
+description: >
+  Customer Support Ticket Triage — a real-world OpenEnv environment where
+  agents learn to classify, prioritize, and route support tickets.
+  Tasks range from easy (3 clear tickets) to hard (7 ambiguous multi-issue tickets).
+
+author: OpenEnv Hackathon Submission
+tags:
+  - openenv
+  - customer-support
+  - nlp
+  - classification
+  - real-world
+
+tasks:
+  - name: easy_triage
+    description: Classify and prioritize 3 straightforward support tickets
+    difficulty: easy
+    max_steps: 3
+
+  - name: medium_triage
+    description: Handle 5 mixed-complexity tickets requiring nuanced routing
+    difficulty: medium
+    max_steps: 5
+
+  - name: hard_triage
+    description: Process 7 ambiguous multi-issue tickets under pressure
+    difficulty: hard
+    max_steps: 7
+
+observation_space:
+  type: object
+  fields:
+    ticket_id: string
+    subject: string
+    body: string
+    sender_email: string
+    created_at: string
+    task_name: string
+    step: integer
+    max_steps: integer
+    tickets_processed: integer
+    current_score: float
+    message: string
+
+action_space:
+  type: object
+  fields:
+    priority:
+      type: enum
+      values: [low, medium, high, critical]
+    category:
+      type: enum
+      values: [billing, technical, account, general, refund]
+    department:
+      type: enum
+      values: [billing_team, tech_support, account_team, general_support]
+    summary:
+      type: string
+      description: One-sentence summary of the ticket
+
+reward:
+  range: [0.0, 1.0]
+  type: continuous
+  description: >
+    Weighted score: priority 40%, category 35%, department 25%.
+    Partial credit for adjacent priority levels.
+    -0.1 penalty for missing or too-short summary.
+
+endpoints:
+  base_url: http://localhost:7860
+  reset: POST /reset
+  step: POST /step
+  state: GET /state
+  info: GET /info
+
+runtime:
+  python: "3.10"
+  framework: fastapi
+  ui: streamlit
