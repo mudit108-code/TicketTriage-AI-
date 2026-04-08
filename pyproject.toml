@@ -1,0 +1,17 @@
+[project]
+name = "ticket-triage"
+version = "0.0.1"
+description = "Customer Support Ticket Triage FastAPI App"
+authors = [
+    { name = "Mudit" }
+]
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic",
+    "requests"
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
